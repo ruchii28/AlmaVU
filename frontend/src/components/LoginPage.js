@@ -5,6 +5,7 @@ import './LoginPage.css';
 const LoginPage = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [showPassword, setShowPassword] = useState(false);
     const [error, setError] = useState('');
 
     const navigate = useNavigate();
@@ -27,7 +28,7 @@ const LoginPage = () => {
 
             const data = await response.json();
             localStorage.setItem('token', data.token);
-            navigate('/dashboard');
+            navigate('/selection'); // Navigate to SelectionPage after successful login
         } catch (error) {
             setError('Error logging in: ' + error.message);
         }
@@ -49,12 +50,21 @@ const LoginPage = () => {
                     </div>
                     <div className="form-group">
                         <label htmlFor="password">Password:</label>
-                        <input
-                            type="password"
-                            id="password"
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
-                        />
+                        <div className="password-container">
+                            <input
+                                type={showPassword ? 'text' : 'password'}
+                                id="password"
+                                value={password}
+                                onChange={(e) => setPassword(e.target.value)}
+                            />
+                            <button
+                                type="button"
+                                className="show-password-button"
+                                onClick={() => setShowPassword(!showPassword)}
+                            >
+                                {showPassword ? 'Hide' : 'Show'}
+                            </button>
+                        </div>
                     </div>
                     <button type="submit" className="login-button">Login</button>
                 </form>

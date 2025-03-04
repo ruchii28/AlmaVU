@@ -27,8 +27,9 @@ const FilterPage = () => {
             });
 
             if (!response.ok) {
-                const data = await response.json();
-                throw new Error(data.message || 'Failed to fetch data');
+                const text = await response.text();
+                console.error('Error response text:', text);
+                throw new Error(text || 'Failed to fetch data');
             }
 
             const data = await response.json();
