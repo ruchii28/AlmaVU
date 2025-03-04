@@ -1,0 +1,39 @@
+.selection-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #f5f5f5; /* Light grey background */
+}
+
+.selection-box {
+    background-color: white;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+    width: 400px;
+    text-align: center;
+    font-family: 'Arial', sans-serif;
+}
+
+.selection-box h2 {
+    margin-bottom: 20px;
+    color: #333; /* Dark grey color */
+}
+
+.selection-button {
+    width: 100%;
+    padding: 10px;
+    background-color: #0056b3; /* Dark blue color */
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    margin-bottom: 10px;
+    transition: background-color 0.3s ease;
+}
+
+.selection-button:hover {
+    background-color: #004494; /* Slightly darker blue on hover */
+}

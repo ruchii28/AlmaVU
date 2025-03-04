@@ -1,0 +1,8 @@
+# Ignore node_modules directory
+node_modules/
+
+# Ignore other potentially unnecessary files
+.DS_Store
+dist/
+build/
+.env

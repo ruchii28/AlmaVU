@@ -1,0 +1,89 @@
+.event-email-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #f5f5f5; /* Light grey background */
+}
+
+.event-email-box {
+    background-color: white;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+    width: 80%;
+    max-width: 1200px;
+    text-align: center;
+    font-family: 'Arial', sans-serif;
+}
+
+.event-email-box h2 {
+    margin-bottom: 20px;
+    color: #333; /* Dark grey color */
+}
+
+.results-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+}
+
+.results-table th,
+.results-table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+}
+
+.results-table th {
+    background-color: #0056b3;
+    color: white;
+    text-align: left;
+}
+
+.results-table tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+.results-table tr:hover {
+    background-color: #ddd;
+}
+
+.results-table th {
+    padding-top: 12px;
+    padding-bottom: 12px;
+}
+
+.form-group {
+    margin-bottom: 20px;
+    text-align: left;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    color: #0056b3; /* Dark blue color */
+}
+
+.send-button {
+    width: 100%;
+    padding: 10px;
+    background-color: #0056b3; /* Dark blue color */
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.send-button:hover {
+    background-color: #004494; /* Slightly darker blue on hover */
+}
+
+.error-message {
+    color: red;
+}
+
+.success-message {
+    color: green;
+}
