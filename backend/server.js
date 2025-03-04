@@ -1,64 +1,38 @@
-// const express = require('express');
-// const cors = require('cors');
-// const mongoose = require('mongoose');
-// const session = require('express-session');
-// const authRoutes = require('./routes/auth');
-// const alumniRoutes = require('./routes/alumni');
-// require('dotenv').config();
-
-// const app = express();
-
-// // Middleware
-// app.use(cors());
-// app.use(express.json());
-// app.use(session({ secret: 'your_secret_key', resave: false, saveUninitialized: false }));
-
-// // MongoDB connection
-// mongoose.connect(process.env.MONGO_URI)
-//   .then(() => console.log('MongoDB connected'))
-//   .catch(err => console.log(err));
-
-// // Routes
-// app.use('/auth', authRoutes);
-// app.use('/alumni', alumniRoutes);
-
-// // Start server
-// app.listen(3000, () => {
-//     console.log('Server started on port 3000');
-
-//     // Run the scheduler
-//     require('./schedule');
-// });
-
-
 const express = require('express');
-const cors = require('cors');
+const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
-const session = require('express-session');
-const authRoutes = require('./routes/auth');
+const cors = require('cors');
+const dotenv = require('dotenv');
 const alumniRoutes = require('./routes/alumni');
-require('dotenv').config();
+const authRoutes = require('./routes/auth');
+
+dotenv.config(); // Load environment variables from .env file
 
 const app = express();
+const PORT = process.env.PORT || 3000;
 
 // Middleware
+app.use(bodyParser.json());
 app.use(cors());
-app.use(express.json());
-app.use(session({ secret: 'your_secret_key', resave: false, saveUninitialized: false }));
 
-// MongoDB connection
-mongoose.connect(process.env.MONGO_URI)
-  .then(() => console.log('MongoDB connected'))
-  .catch(err => console.log(err));
+// Database connection
+mongoose.connect('mongodb://localhost:27017/AlumniDB').then(() => {
+    console.log('Connected to the database');
+}).catch((err) => {
+    console.error('Database connection error:', err);
+});
 
 // Routes
-app.use('/auth', authRoutes);
 app.use('/alumni', alumniRoutes);
+app.use('/auth', authRoutes);
+
+// Error handling middleware
+app.use((err, req, res, next) => {
+    console.error(err.stack);
+    res.status(500).send('Something broke!');
+});
 
 // Start server
-app.listen(3000, () => {
-    console.log('Server started on port 3000');
-
-    // Run the scheduler
-    require('./schedule');
+app.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`);
 });

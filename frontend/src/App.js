@@ -51,13 +51,14 @@
 
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import Login from './components/Login';
+import Login from './components/LoginPage';
 import FilterPage from './components/FilterPage';
 import ResultsPage from './components/ResultsPage';
 import SelectionPage from './components/SelectionPage';
 import EventInfoPage from './components/EventInfoPage';
 import EventEmailPage from './components/EventEmailPage';
-import FilteredAlumniPage from './components/FilteredAlumniPage';
+import FilteredAlumniPage from './components/FilteredResultsPage';
+import EmailPreviewPage from './components/EmailPreviewPage';
 
 const App = () => {
     return (

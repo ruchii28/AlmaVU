@@ -1,97 +1,158 @@
 import React, { useState } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import './EventEmailPage.css';
 
 const EventEmailPage = () => {
-    const location = useLocation();
-    const { results, showEmailOption } = location.state || { results: [], showEmailOption: false };
+    const [filters, setFilters] = useState({
+        registrationNumber: '',
+        batch: '',
+        department: '',
+        birthday: '',
+        sortField: 'fullName',
+        sortOrder: 'asc'
+    });
     const [emailContent, setEmailContent] = useState('');
     const [error, setError] = useState('');
-    const [success, setSuccess] = useState('');
+    const [results, setResults] = useState([]);
 
     const navigate = useNavigate();
 
-    const handleSendEmails = async (event) => {
+    const handleFilterAndSendEmails = async (event) => {
         event.preventDefault();
         setError('');
-        setSuccess('');
-
-        const selectedAlumni = results.map(alumni => alumni._id);
+        setResults([]);
 
         try {
-            const response = await fetch('http://localhost:3000/alumni/send-email', {
+            // First, filter the data
+            const filterResponse = await fetch('http://localhost:3000/alumni/filter', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ selectedAlumni, emailContent })
+                body: JSON.stringify(filters)
             });
 
-            if (response.ok) {
-                setSuccess('Emails sent successfully');
-                setEmailContent('');
-                navigate('/filter');
-            } else {
-                const data = await response.json();
-                throw new Error(data.message);
+            if (!filterResponse.ok) {
+                const data = await filterResponse.json();
+                throw new Error(data.message || 'Failed to fetch data');
             }
+
+            const filteredData = await filterResponse.json();
+            setResults(filteredData);
+
+            // Navigate to the results page to display filtered data and email content
+            navigate('/email-preview', { state: { results: filteredData, emailContent } });
         } catch (error) {
-            setError('Failed to send emails: ' + error.message);
+            setError('Error fetching data: ' + error.message);
         }
     };
 
+    const handleChange = (event) => {
+        const { name, value } = event.target;
+        setFilters({ ...filters, [name]: value });
+    };
+
+    const handleEmailContentChange = (event) => {
+        setEmailContent(event.target.value);
+    };
+
+    const handleReset = () => {
+        setFilters({
+            registrationNumber: '',
+            batch: '',
+            department: '',
+            birthday: '',
+            sortField: 'fullName',
+            sortOrder: 'asc'
+        });
+        setEmailContent('');
+        setError('');
+    };
+
     return (
-        <div className="event-email-container">
-            <div className="event-email-box">
-                <h2>Filtered Alumni Data</h2>
-                {results.length > 0 ? (
-                    <table className="results-table">
-                        <thead>
-                            <tr>
-                                <th>Full Name</th>
-                                <th>Registration Number</th>
-                                <th>Batch</th>
-                                <th>Department</th>
-                                <th>Email</th>
-                                <th>Contact</th>
-                                <th>Birthday</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {results.map((alumni, index) => (
-                                <tr key={index}>
-                                    <td>{alumni.fullName}</td>
-                                    <td>{alumni.registrationNumber}</td>
-                                    <td>{alumni.batch}</td>
-                                    <td>{alumni.department}</td>
-                                    <td>{alumni.email}</td>
-                                    <td>{alumni.contact}</td>
-                                    <td>{new Date(alumni.birthday).toLocaleDateString()}</td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
-                ) : (
-                    <p>No alumni data available.</p>
-                )}
-                {showEmailOption && (
-                    <>
-                        <h2>Send Event Information</h2>
-                        <form onSubmit={handleSendEmails}>
-                            <div className="form-group">
-                                <label htmlFor="emailContent">Email Content:</label>
-                                <textarea
-                                    id="emailContent"
-                                    value={emailContent}
-                                    onChange={(e) => setEmailContent(e.target.value)}
-                                    rows="6"
-                                    placeholder="Write your email content here..."
-                                ></textarea>
-                            </div>
-                            <button type="submit" className="send-button">Send Email</button>
-                        </form>
-                        {error && <p className="error-message">{error}</p>}
-                        {success && <p className="success-message">{success}</p>}
-                    </>
-                )}
+        <div className="send-event-container">
+            <div className="send-event-box">
+                <h2>Send Event Information</h2>
+                <form onSubmit={handleFilterAndSendEmails}>
+                    <div className="form-group">
+                        <label htmlFor="registrationNumber">Registration Number:</label>
+                        <input
+                            type="text"
+                            id="registrationNumber"
+                            name="registrationNumber"
+                            value={filters.registrationNumber}
+                            onChange={handleChange}
+                        />
+                    </div>
+                    <div className="form-group">
+                        <label htmlFor="batch">Batch:</label>
+                        <input
+                            type="text"
+                            id="batch"
+                            name="batch"
+                            value={filters.batch}
+                            onChange={handleChange}
+                        />
+                    </div>
+                    <div className="form-group">
+                        <label htmlFor="department">Department:</label>
+                        <input
+                            type="text"
+                            id="department"
+                            name="department"
+                            value={filters.department}
+                            onChange={handleChange}
+                        />
+                    </div>
+                    <div className="form-group">
+                        <label htmlFor="birthday">Birthday:</label>
+                        <input
+                            type="date"
+                            id="birthday"
+                            name="birthday"
+                            value={filters.birthday}
+                            onChange={handleChange}
+                        />
+                    </div>
+                    <div className="form-group">
+                        <label htmlFor="sortField">Sort By:</label>
+                        <select
+                            id="sortField"
+                            name="sortField"
+                            value={filters.sortField}
+                            onChange={handleChange}
+                        >
+                            <option value="fullName">Full Name</option>
+                            <option value="registrationNumber">Registration Number</option>
+                            <option value="batch">Batch</option>
+                            <option value="department">Department</option>
+                            <option value="birthday">Birthday</option>
+                        </select>
+                    </div>
+                    <div className="form-group">
+                        <label htmlFor="sortOrder">Order:</label>
+                        <select
+                            id="sortOrder"
+                            name="sortOrder"
+                            value={filters.sortOrder}
+                            onChange={handleChange}
+                        >
+                            <option value="asc">Ascending</option>
+                            <option value="desc">Descending</option>
+                        </select>
+                    </div>
+                    <div className="form-group">
+                        <label htmlFor="emailContent">Email Content:</label>
+                        <textarea
+                            id="emailContent"
+                            value={emailContent}
+                            onChange={handleEmailContentChange}
+                            rows="6"
+                            placeholder="Write your email content here..."
+                        ></textarea>
+                    </div>
+                    <button type="submit" className="send-button">Send Email</button>
+                    <button type="button" className="reset-button" onClick={handleReset}>Reset</button>
+                </form>
+                {error && <p className="error-message">{error}</p>}
             </div>
         </div>
     );

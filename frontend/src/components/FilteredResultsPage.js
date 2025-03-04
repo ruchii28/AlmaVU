@@ -1,14 +1,14 @@
 import React from 'react';
 import { useLocation } from 'react-router-dom';
-import './FilteredAlumniPage.css';
+import './FilteredResultsPage.css';
 
-const FilteredAlumniPage = () => {
+const FilteredResultsPage = () => {
     const location = useLocation();
     const { results } = location.state || { results: [] };
 
     return (
-        <div className="filtered-alumni-container">
-            <div className="filtered-alumni-box">
+        <div className="results-container">
+            <div className="results-box">
                 <h2>Filtered Alumni Data</h2>
                 {results.length > 0 ? (
                     <table className="results-table">
@@ -45,4 +45,4 @@ const FilteredAlumniPage = () => {
     );
 };
 
-export default FilteredAlumniPage;
+export default FilteredResultsPage;

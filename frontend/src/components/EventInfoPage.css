@@ -1,95 +1,52 @@
-.event-info-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    background-color: #f5f5f5; /* Light grey background */
+.send-event-container {
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.event-info-box {
-    background-color: white;
-    padding: 30px;
-    border-radius: 10px;
-    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
-    width: 400px;
-    text-align: center;
-    font-family: 'Arial', sans-serif;
-}
-
-.event-info-box h2 {
-    margin-bottom: 20px;
-    color: #333; /* Dark grey color */
+.send-event-box {
+    max-width: 600px;
+    margin: 0 auto;
 }
 
 .form-group {
-    margin-bottom: 20px;
-    text-align: left;
+    margin-bottom: 15px;
 }
 
 .form-group label {
     display: block;
-    margin-bottom: 5px;
-    color: #0056b3; /* Dark blue color */
-}
-
-.alumni-list {
-    max-height: 200px;
-    overflow-y: auto;
-    border: 1px solid #ccc;
-    padding: 10px;
-    border-radius: 5px;
-}
-
-.alumni-item {
+    font-weight: bold;
     margin-bottom: 5px;
 }
 
-.send-button, .filter-button {
+.form-group input,
+.form-group textarea {
     width: 100%;
-    padding: 10px;
-    background-color: #0056b3; /* Dark blue color */
-    color: white;
-    border: none;
-    border-radius: 5px;
-    font-size: 16px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-    margin-bottom: 10px;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
 }
 
-.send-button:hover, .filter-button:hover {
-    background-color: #004494; /* Slightly darker blue on hover */
+.send-button {
+    background-color: #28a745;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.send-button:hover {
+    background-color: #218838;
 }
 
 .error-message {
     color: red;
-}
-
-.success-message {
-    color: green;
-}
-
-.reset-button {
-    width: 100%;
-    padding: 10px;
-    background-color: #f44336; /* Red color */
-    color: white;
-    border: none;
-    border-radius: 5px;
-    font-size: 16px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
     margin-top: 10px;
 }
 
-.reset-button:hover {
-    background-color: #d32f2f; /* Darker red on hover */
-}
-
-.error-message {
-    color: red;
-}
-
 .success-message {
     color: green;
+    margin-top: 10px;
 }
