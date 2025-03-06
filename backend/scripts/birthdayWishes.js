@@ -38,11 +38,24 @@ async function sendBirthdayWishes() {
     const currentMonth = currentDate.getUTCMonth() + 1; // Months are 0-based
 
     try {
+        console.log('Checking for alumni with birthdays today...');
+
         // Find alumni with birthdays today
         const alumniWithBirthdayToday = await Alumni.aggregate([
-            { $addFields: { "birthdayDay": { $dayOfMonth: "$birthday" }, "birthdayMonth": { $month: "$birthday" } } },
-            { $match: { "birthdayDay": currentDay, "birthdayMonth": currentMonth } }
+            { $addFields: { birthdayDay: { $dayOfMonth: '$birthday' }, birthdayMonth: { $month: '$birthday' } } },
+            { $match: { birthdayDay: currentDay, birthdayMonth: currentMonth } }
         ]);
+
+        if (alumniWithBirthdayToday.length === 0) {
+            console.log('No alumni have birthdays today.');
+            return;
+        }
+
+        // Display alumni whose birthdays are today
+        console.log('Alumni with birthdays today:');
+        alumniWithBirthdayToday.forEach(alumni => {
+            console.log(`- ${alumni.fullName} (${alumni.email})`); // Update here
+        });
 
         // Select the email template
         const template = selectTemplate();
@@ -53,11 +66,15 @@ async function sendBirthdayWishes() {
                 from: process.env.EMAIL_USER,
                 to: alumni.email,
                 subject: 'Happy Birthday!',
-                html: template.replace('{{fullName}}', alumni.fullName)
+                html: template.replace('{{name}}', alumni.fullName) // Update here
             };
 
-            await transporter.sendMail(mailOptions);
-            console.log(`Birthday wish sent to: ${alumni.email}`);
+            try {
+                await transporter.sendMail(mailOptions);
+                console.log(`Birthday wish sent to: ${alumni.email}`);
+            } catch (error) {
+                console.error(`Failed to send birthday wish to: ${alumni.email}`, error);
+            }
         }
     } catch (error) {
         console.error('Error sending birthday wishes:', error);

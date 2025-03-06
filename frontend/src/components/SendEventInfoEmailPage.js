@@ -5,13 +5,28 @@ import './SendEventInfoEmailPage.css';
 const SendEventInfoEmailPage = () => {
     const [filters, setFilters] = useState({
         registrationNumber: '',
-        graduationYearFrom: '',
-        graduationYearTo: '',
-        department: ''
+        batchFrom: '',
+        batchTo: '',
+        department: '',
+        sortBy: '',
+        order: 'asc'
     });
     const [error, setError] = useState('');
 
     const navigate = useNavigate();
+
+    const currentYear = new Date().getFullYear();
+    const graduationYears = Array.from(new Array(currentYear - 1999), (val, index) => 2000 + index);
+
+    const departments = [
+        'AIML',
+        'Chemical',
+        'Civil',
+        'Computer Science',
+        'ECE',
+        'EEE',
+        'Mechanical'
+    ];
 
     const handleChange = (e) => {
         setFilters({ ...filters, [e.target.name]: e.target.value });
@@ -56,34 +71,72 @@ const SendEventInfoEmailPage = () => {
                         />
                     </div>
                     <div className="form-group">
-                        <label htmlFor="graduationYearFrom">Graduation Year (From):</label>
-                        <input
-                            type="text"
-                            id="graduationYearFrom"
-                            name="graduationYearFrom"
-                            value={filters.graduationYearFrom}
+                        <label htmlFor="batchFrom">Graduation Year (From):</label>
+                        <select
+                            id="batchFrom"
+                            name="batchFrom"
+                            value={filters.batchFrom}
                             onChange={handleChange}
-                        />
+                        >
+                            <option value="">Select</option>
+                            {graduationYears.map(year => (
+                                <option key={year} value={year}>{year}</option>
+                            ))}
+                        </select>
                     </div>
                     <div className="form-group">
-                        <label htmlFor="graduationYearTo">Graduation Year (To):</label>
-                        <input
-                            type="text"
-                            id="graduationYearTo"
-                            name="graduationYearTo"
-                            value={filters.graduationYearTo}
+                        <label htmlFor="batchTo">Graduation Year (To):</label>
+                        <select
+                            id="batchTo"
+                            name="batchTo"
+                            value={filters.batchTo}
                             onChange={handleChange}
-                        />
+                        >
+                            <option value="">Select</option>
+                            {graduationYears.map(year => (
+                                <option key={year} value={year}>{year}</option>
+                            ))}
+                        </select>
                     </div>
                     <div className="form-group">
                         <label htmlFor="department">Department:</label>
-                        <input
-                            type="text"
+                        <select
                             id="department"
                             name="department"
                             value={filters.department}
                             onChange={handleChange}
-                        />
+                        >
+                            <option value="">Select</option>
+                            {departments.map(department => (
+                                <option key={department} value={department}>{department}</option>
+                            ))}
+                        </select>
+                    </div>
+                    <div className="form-group">
+                        <label htmlFor="sortBy">Sort By:</label>
+                        <select
+                            id="sortBy"
+                            name="sortBy"
+                            value={filters.sortBy}
+                            onChange={handleChange}
+                        >
+                            <option value="">Select</option>
+                            <option value="registrationNumber">Registration Number</option>
+                            <option value="batch">Batch</option>
+                            <option value="department">Department</option>
+                        </select>
+                    </div>
+                    <div className="form-group">
+                        <label htmlFor="order">Order:</label>
+                        <select
+                            id="order"
+                            name="order"
+                            value={filters.order}
+                            onChange={handleChange}
+                        >
+                            <option value="asc">Ascending</option>
+                            <option value="desc">Descending</option>
+                        </select>
                     </div>
                     <button type="submit" className="filter-button">Filter</button>
                 </form>

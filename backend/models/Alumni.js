@@ -18,7 +18,7 @@ const AlumniSchema = new mongoose.Schema({
     type: Date,
     required: true
   },
-  name: {
+  fullName: {  
     type: String,
     required: true
   },
