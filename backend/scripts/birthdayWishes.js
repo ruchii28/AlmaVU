@@ -1,6 +1,8 @@
+
 require('dotenv').config();
 const mongoose = require('mongoose');
 const nodemailer = require('nodemailer');
+const axios = require('axios');
 const fs = require('fs');
 const path = require('path');
 const Alumni = require('../models/Alumni'); // Adjust the path as needed
@@ -17,8 +19,14 @@ const transporter = nodemailer.createTransport({
     }
 });
 
-// Function to select a template
-function selectTemplate() {
+// WhatsApp API credentials
+const WHATSAPP_PHONE_NUMBER_ID = process.env.WHATSAPP_PHONE_NUMBER_ID;
+const WHATSAPP_ACCESS_TOKEN = process.env.WHATSAPP_ACCESS_TOKEN;
+const WHATSAPP_TEMPLATE_NAME = 'birthday_wish'; // Replace with your template name
+const WHATSAPP_LANGUAGE_CODE = 'en_US'; // Replace with your template language code
+
+// Function to select an email template
+function selectEmailTemplate() {
     const templates = ['template1.html', 'template2.html', 'template3.html'];
     const currentDate = new Date();
     const dayOfMonth = currentDate.getDate();
@@ -26,6 +34,41 @@ function selectTemplate() {
     const templatePath = path.join(__dirname, '..', 'templates', templates[templateIndex]);
     return fs.readFileSync(templatePath, 'utf-8');
 }
+
+// Function to send WhatsApp message using a template
+const sendWhatsAppMessage = async (phoneNumber, templateName, languageCode, variables) => {
+    try {
+        const response = await axios.post(
+            `https://graph.facebook.com/v17.0/${WHATSAPP_PHONE_NUMBER_ID}/messages`,
+            {
+                messaging_product: 'whatsapp',
+                to: phoneNumber,
+                type: 'template',
+                template: {
+                    name: templateName,
+                    language: {
+                        code: languageCode
+                    },
+                    components: [
+                        {
+                            type: 'body',
+                            parameters: variables.map(variable => ({ type: 'text', text: variable }))
+                        }
+                    ]
+                }
+            },
+            {
+                headers: {
+                    'Authorization': `Bearer ${WHATSAPP_ACCESS_TOKEN}`,
+                    'Content-Type': 'application/json'
+                }
+            }
+        );
+        console.log(`Message sent to ${phoneNumber}: `, response.data);
+    } catch (error) {
+        console.error(`Failed to send message to ${phoneNumber}: `, error.response ? error.response.data : error.message);
+    }
+};
 
 // Function to send birthday wishes
 async function sendBirthdayWishes() {
@@ -54,26 +97,34 @@ async function sendBirthdayWishes() {
         // Display alumni whose birthdays are today
         console.log('Alumni with birthdays today:');
         alumniWithBirthdayToday.forEach(alumni => {
-            console.log(`- ${alumni.fullName} (${alumni.email})`); // Update here
+            console.log(`- ${alumni.fullName} (${alumni.email}, ${alumni.contact})`);
         });
 
         // Select the email template
-        const template = selectTemplate();
+        const emailTemplate = selectEmailTemplate();
 
-        // Send emails to each alumni
+        // Send emails and WhatsApp messages to each alumni
         for (const alumni of alumniWithBirthdayToday) {
-            const mailOptions = {
+            const emailOptions = {
                 from: process.env.EMAIL_USER,
                 to: alumni.email,
                 subject: 'Happy Birthday!',
-                html: template.replace('{{name}}', alumni.fullName) // Update here
+                html: emailTemplate.replace('{{name}}', alumni.fullName)
             };
 
             try {
-                await transporter.sendMail(mailOptions);
-                console.log(`Birthday wish sent to: ${alumni.email}`);
+                await transporter.sendMail(emailOptions);
+                console.log(`Birthday email sent to: ${alumni.email}`);
             } catch (error) {
-                console.error(`Failed to send birthday wish to: ${alumni.email}`, error);
+                console.error(`Failed to send birthday email to: ${alumni.email}`, error);
+            }
+
+            const whatsappVariables = [alumni.fullName];
+            try {
+                await sendWhatsAppMessage(alumni.contact, WHATSAPP_TEMPLATE_NAME, WHATSAPP_LANGUAGE_CODE, whatsappVariables);
+                console.log(`Birthday WhatsApp message sent to: ${alumni.contact}`);
+            } catch (error) {
+                console.error(`Failed to send birthday WhatsApp message to: ${alumni.contact}`, error);
             }
         }
     } catch (error) {

@@ -1,4 +1,4 @@
-.results-container {
+/* .results-container {
     padding: 30px;
     background-color: #ffffff;
     border-radius: 10px;
@@ -58,4 +58,105 @@
     font-weight: bold;
     text-align: center;
     margin-top: 20px;
+} */
+
+
+
+.results-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-color: #f9f9f9;
+}
+
+.results-box {
+    background-color: #fff;
+    padding: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    width: 90%;
+    max-width: 1200px;
+}
+
+.results-box h2 {
+    margin-bottom: 10px;
+    text-align: center;
+}
+
+.filter-details {
+    margin-bottom: 20px;
+    font-size: 14px;
+    text-align: center;
+    color: #555;
+}
+
+.results-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+    table-layout: fixed; /* Ensures columns are evenly distributed */
+}
+
+.results-table th,
+.results-table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+    word-wrap: break-word; /* Ensures text breaks to fit within cell */
+}
+
+.results-table th {
+    background-color: #f2f2f2;
+}
+
+.print-button {
+    display: block;
+    margin: 0 auto;
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.print-button:hover {
+    background-color: #0056b3;
+}
+
+@media print {
+    body {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    .results-container {
+        min-height: auto;
+        background-color: #fff;
+    }
+
+    .results-box {
+        box-shadow: none;
+        border-radius: 0;
+        width: auto;
+        max-width: none;
+        padding: 0;
+    }
+
+    .filter-details {
+        font-size: 12px;
+        color: #000;
+    }
+
+    .print-button {
+        display: none;
+    }
+
+    @page {
+        size: A4 landscape; /* Sets the page size to A4 in landscape mode */
+        margin: 20mm;
+    }
 }
