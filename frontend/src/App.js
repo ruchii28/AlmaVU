@@ -6,7 +6,7 @@ import SelectionPage from './components/SelectionPage';
 import FilteredResultsPage from './components/FilteredResultsPage';
 import SendEventInfoEmailPage from './components/SendEventInfoEmailPage';
 import EmailContentPage from './components/EmailContentPage';
-import FilterComponent from './components/FilterComponent';
+
 
 const App = () => {
     return (
@@ -19,7 +19,7 @@ const App = () => {
                     <Route path="/filtered-results" element={<FilteredResultsPage />} />
                     <Route path="/send-event-info-email" element={<SendEventInfoEmailPage />} />
                     <Route path="/email-content" element={<EmailContentPage />} />
-                    <Route path="/filter" element={<FilterComponent />} />
+
                     <Route path="/" element={<Login />} />
                 </Routes>
             </div>

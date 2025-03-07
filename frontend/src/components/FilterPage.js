@@ -47,10 +47,24 @@ const FilterPage = () => {
             }
 
             const data = await response.json();
-            navigate('/filtered-results', { state: { results: data } });
+            const filterDetails = getFilterDetails(filters);
+            navigate('/filtered-results', { state: { results: data, filterDetails } });
         } catch (error) {
             setError('Error fetching data: ' + error.message);
         }
+    };
+
+    const getFilterDetails = (filters) => {
+        const filterDescriptions = [];
+
+        if (filters.registrationNumber) filterDescriptions.push(`Registration Number: ${filters.registrationNumber}`);
+        if (filters.batchFrom) filterDescriptions.push(`Batch From: ${filters.batchFrom}`);
+        if (filters.batchTo) filterDescriptions.push(`Batch To: ${filters.batchTo}`);
+        if (filters.department) filterDescriptions.push(`Department: ${filters.department}`);
+        if (filters.birthday) filterDescriptions.push(`Birthday: ${new Date(filters.birthday).toLocaleDateString()}`);
+        if (filters.sortField) filterDescriptions.push(`Sort By: ${filters.sortField} (${filters.sortOrder})`);
+
+        return filterDescriptions.length > 0 ? filterDescriptions.join(', ') : 'All Data';
     };
 
     const handleChange = (event) => {
